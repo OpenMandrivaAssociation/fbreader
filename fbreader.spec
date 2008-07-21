@@ -10,6 +10,7 @@ Group:  Office
 URL: http://www.fbreader.org
 Source: http://www.fbreader.org/%{name}-sources-%{version}.tgz
 BuildRequires: gtk+2-devel
+BuildRequires: jpeg-devel
 BuildRequires: libstdc++-devel
 BuildRequires: libexpat-devel
 BuildRequires: zlib-devel
