@@ -1,5 +1,5 @@
-%define version 0.8.17
-%define release %mkrel 2
+%define version 0.10.1
+%define release %mkrel 1
 
 Name: fbreader
 Version: %{version}
@@ -16,6 +16,7 @@ BuildRequires: libexpat-devel
 BuildRequires: zlib-devel
 BuildRequires: bzip2-devel
 BuildRequires: linebreak-devel
+BuildRequires: curl-devel
 Buildroot: %{_tmppath}/%{name}-%{version}
 
 %description
