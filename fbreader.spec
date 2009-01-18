@@ -17,6 +17,7 @@ BuildRequires: zlib-devel
 BuildRequires: bzip2-devel
 BuildRequires: linebreak-devel
 BuildRequires: curl-devel
+BuildRequires: fribidi-devel
 Buildroot: %{_tmppath}/%{name}-%{version}
 
 %description
