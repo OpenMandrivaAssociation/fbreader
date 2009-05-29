@@ -1,4 +1,4 @@
-%define version 0.10.5
+%define version 0.10.7
 %define release %mkrel 1
 
 Name: fbreader
