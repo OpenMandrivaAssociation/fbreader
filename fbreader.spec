@@ -18,6 +18,7 @@ BuildRequires: bzip2-devel
 BuildRequires: linebreak-devel
 BuildRequires: curl-devel
 BuildRequires: fribidi-devel
+BuildRequires: sqlite3-devel
 Buildroot: %{_tmppath}/%{name}-%{version}
 
 %description
