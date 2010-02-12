@@ -1,5 +1,5 @@
-%define version 0.12.1
-%define release %mkrel 2
+%define version 0.12.2
+%define release %mkrel 1
 
 Name: fbreader
 Version: %{version}
