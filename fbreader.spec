@@ -1,25 +1,25 @@
-%define version 0.12.6
-%define release %mkrel 1
+%define	version	0.12.7
+%define	release	%mkrel 1
 
-Name: fbreader
-Version: %{version}
-Release: %{release}
-Summary: Reader for e-books in various formats
-License: GPL
-Group:  Office
-URL: http://www.fbreader.org
-Source: http://www.fbreader.org/%{name}-sources-%{version}.tgz
-BuildRequires: gtk+2-devel
-BuildRequires: jpeg-devel
-BuildRequires: libstdc++-devel
-BuildRequires: libexpat-devel
-BuildRequires: zlib-devel
-BuildRequires: bzip2-devel
-BuildRequires: linebreak-devel
-BuildRequires: curl-devel
-BuildRequires: fribidi-devel
-BuildRequires: sqlite3-devel
-Buildroot: %{_tmppath}/%{name}-%{version}
+Name:		fbreader
+Version:	%{version}
+Release:	%{release}
+Summary:	Reader for e-books in various formats
+License:	GPLv2
+Group:		Office
+URL:		http://www.fbreader.org
+Source:		http://www.fbreader.org/%{name}-sources-%{version}.tgz
+BuildRequires:	gtk+2-devel
+BuildRequires:	jpeg-devel
+BuildRequires:	libstdc++-devel
+BuildRequires:	libexpat-devel
+BuildRequires:	zlib-devel
+BuildRequires:	bzip2-devel
+BuildRequires:	linebreak-devel
+BuildRequires:	curl-devel
+BuildRequires:	fribidi-devel
+BuildRequires:	sqlite3-devel
+Buildroot:	%{_tmppath}/%{name}-%{version}
 
 %description
 FBReader is an e-book reader for various platforms.
