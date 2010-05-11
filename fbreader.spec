@@ -1,5 +1,5 @@
 %define	version	0.12.10
-%define	release	%mkrel 1
+%define	release	%mkrel 2
 
 Name:		fbreader
 Version:	%{version}
@@ -9,6 +9,7 @@ License:	GPLv2
 Group:		Office
 URL:		http://www.fbreader.org
 Source:		http://www.fbreader.org/%{name}-sources-%{version}.tgz
+Patch0:		fbreader-0.12.10-iconext.patch
 BuildRequires:	gtk+2-devel
 BuildRequires:	jpeg-devel
 BuildRequires:	libstdc++-devel
@@ -28,6 +29,7 @@ TCR, RTF, OEB, OpenReader, mobipocket, plain text.
 
 %prep
 %setup -q
+%apply_patches
 perl -pi -e 's/moc-qt4/moc/' makefiles/arch/desktop.mk
 
 %build
