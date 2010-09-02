@@ -10,6 +10,8 @@ Group:		Office
 URL:		http://www.fbreader.org
 Source:		http://www.fbreader.org/%{name}-sources-%{version}.tgz
 Patch0:		fbreader-0.12.10-iconext.patch
+Patch1:		fbreader-0.12.10-gcc45.patch
+Patch2:		fbreader-0.12.10-xdgopen.patch
 BuildRequires:	gtk+2-devel
 BuildRequires:	jpeg-devel
 BuildRequires:	libstdc++-devel
@@ -31,6 +33,8 @@ TCR, RTF, OEB, OpenReader, mobipocket, plain text.
 %setup -q
 %apply_patches
 perl -pi -e 's/moc-qt4/moc/' makefiles/arch/desktop.mk
+echo "CFLAGS = %optflags" >> makefiles/arch/desktop.mk
+echo "LDFLAGS = %ldflags" >> makefiles/arch/desktop.mk
 
 %build
 make TARGET_ARCH="desktop" \
@@ -40,11 +44,13 @@ make TARGET_ARCH="desktop" \
     LIBDIR=%{_libdir}
 
 %install
+rm -fr %buildroot
 %make TARGET_ARCH="desktop" \
     UI_TYPE="gtk" \
     DESTDIR=%{buildroot} \
     INSTALLDIR=%{_prefix} \
-    LIBDIR=%{_libdir} install
+    LIBDIR=%{_libdir} \
+    install
 
 %clean
 rm -rf %{buildroot}
