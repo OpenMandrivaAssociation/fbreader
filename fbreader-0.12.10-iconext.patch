@@ -1,0 +1,10 @@
+diff -p -up fbreader-0.12.10/fbreader/desktop/desktop.iconext fbreader-0.12.10/fbreader/desktop/desktop
+--- fbreader-0.12.10/fbreader/desktop/desktop.iconext	2010-04-01 15:14:24.000000000 +0200
++++ fbreader-0.12.10/fbreader/desktop/desktop	2010-05-11 20:49:19.000000000 +0200
+@@ -19,5 +19,5 @@ Exec=FBReader %F
+ StartupNotify=true
+ Terminal=false
+ Type=Application
+-Icon=FBReader.png
++Icon=FBReader
+ Categories=Office;Viewer;Literature;
