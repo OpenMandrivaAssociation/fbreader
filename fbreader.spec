@@ -1,23 +1,16 @@
+
+# empty debug
 %define debug_package %{nil}
 %define libname %mklibname  zlibrary 
-%define develname %mklibname zlibrary -d
-
-%define	version	0.12.10
-%define	release	2
 
 Name:		fbreader
-Version:	%{version}
-Release:	%{release}
+Version:	0.99.4
+Release:	2
 Summary:	Reader for e-books in various formats
 License:	GPLv2
 Group:		Office
 URL:		http://www.fbreader.org
-Source:		http://www.fbreader.org/%{name}-sources-%{version}.tgz
-Source1:		FBReader.desktop
-Patch0:		fbreader-0.12.10-iconext.patch
-Patch1:		fbreader-0.12.10-gcc45.patch
-Patch2:		fbreader-0.12.10-xdgopen.patch
-Patch3:		fbreader-0.12.10-linking.patch
+Source:		http://fbreader.org/files/desktop/%{name}-sources-%{version}.tgz
 BuildRequires:	pkgconfig(glib-2.0)
 BuildRequires:	pkgconfig(xft)
 BuildRequires:	pkgconfig(gdk-2.0)
@@ -31,123 +24,100 @@ BuildRequires:	pkgconfig(libcurl)
 BuildRequires:	pkgconfig(fribidi)
 BuildRequires:	pkgconfig(sqlite3)
 BuildRequires:	desktop-file-utils
-Requires:       %{libname} = %{version}
+BuildRequires:	qt4-devel
+Requires:	%{libname}
 
 %description
 FBReader is an e-book reader for various platforms.
 Supported formats include: fb2, HTML, chm, plucker, palmdoc, zTxt,
 TCR, RTF, OEB, OpenReader, mobipocket, plain text.
 
-
 %package -n  %{libname}
 Summary:        Cross-platform GUI library
 Group:          Development/C
-Requires:       %{libname}-ui-gtk = %{version}
+
+%package -n  %{libname}-devel
+Summary:        Development files for %{libname}
+Group:          Development/C
 
 %description -n %{libname}
 ZLibrary is a cross-platform library to build applications running on
 desktop Linux, Windows, and different Linux-based PDAs.
+
+%description -n %{libname}-devel
+Fake devel package provided for backward compatibility
 ####
-%package -n     %{develname}
-Summary:        Development files for zlibrary
-Group:          Development/C
-Requires:	%{libname} = %{version}
-
-%description -n %{develname}
-This package contains the libraries amd header files that are needed
-for writing applications with Zlibrary.
-####
-%package -n     %{libname}-ui-gtk
-Summary:        GTK+ interface module for ZLibrary
-Group:          Development/GNOME and GTK+
-
-%description -n %{libname}-ui-gtk
-This package provides a GTK+-based UI for ZLibrary.
-
 
 
 %prep
 %setup -q
-%patch0 -p1
-%patch1 -p1
-%patch2 -p1
-%patch3 -p0
 
+# fix icon extension in the .desktop file
+perl -pi -e 's,FBReader.png,FBReader,' fbreader/desktop/desktop
+
+# fix qt4 build
+perl -pi -e 's,moc-qt4,%qt4bin/moc,' makefiles/arch/desktop.mk
+perl -pi -e 's,CC = .*,CC = gcc,' makefiles/arch/desktop.mk
+perl -pi -e 's,QTINCLUDE = -I /usr/include/qt4,QTINCLUDE = -I %qt4include,' makefiles/arch/desktop.mk
+perl -pi -e 's,UILIBS = -lQtGui,UILIBS = -lQtGui -lQtCore,' makefiles/arch/desktop.mk
+perl -pi -e 's,-lunibreak,-llinebreak,' makefiles/config.mk zlibrary/text/Makefile
+
+%define _disable_ld_no_undefined 1
 echo "CFLAGS = %optflags" >> makefiles/arch/desktop.mk
 echo "LDFLAGS = %ldflags" >> makefiles/arch/desktop.mk
 
 %build
-%make -C zlibrary/core TARGET_ARCH=desktop LIBDIR=%{_libdir} UI_TYPE=dummy
-%make -C zlibrary/text TARGET_ARCH=desktop LIBDIR=%{_libdir} UI_TYPE=dummy
-%make -C zlibrary/ui TARGET_ARCH=desktop LIBDIR=%{_libdir} UI_TYPE=gtk
-%make -C fbreader TARGET_ARCH=desktop LIBDIR=%{_libdir} UI_TYPE=dummy
+make -C zlibrary/core TARGET_ARCH=desktop UI_TYPE=dummy \
+	DESTDIR=%{buildroot} INSTALLDIR=%{_prefix} LIBDIR=%{_libdir}
 
+make -C zlibrary/text TARGET_ARCH=desktop UI_TYPE=dummy \
+	DESTDIR=%{buildroot} INSTALLDIR=%{_prefix} LIBDIR=%{_libdir}
+
+make -C zlibrary/ui TARGET_ARCH=desktop UI_TYPE=qt4 \
+	DESTDIR=%{buildroot} INSTALLDIR=%{_prefix} LIBDIR=%{_libdir}
+
+make -C fbreader TARGET_ARCH=desktop UI_TYPE=dummy \
+	DESTDIR=%{buildroot} INSTALLDIR=%{_prefix} LIBDIR=%{_libdir}
 
 %install
-make -C zlibrary/core do_install do_install_dev DESTDIR=%{buildroot} TARGET_ARCH=desktop LIBDIR=%{_libdir} UI_TYPE=dummy
-make -C zlibrary/text do_install do_install_dev DESTDIR=%{buildroot} TARGET_ARCH=desktop LIBDIR=%{_libdir} UI_TYPE=dummy
-make -C zlibrary/ui do_install DESTDIR=%{buildroot} TARGET_ARCH=desktop LIBDIR=%{_libdir} UI_TYPE=gtk
-make -C fbreader do_install DESTDIR=%{buildroot} TARGET_ARCH=desktop UI_TYPE=dummy
-touch %{buildroot}%{_libdir}/zlibrary/ui/zlui-active.so  
+make -C zlibrary/core TARGET_ARCH=desktop UI_TYPE=dummy \
+	DESTDIR=%{buildroot} INSTALLDIR=%{_prefix} LIBDIR=%{_libdir} do_install
 
-#man   
+make -C zlibrary/text TARGET_ARCH=desktop UI_TYPE=dummy \
+	DESTDIR=%{buildroot} INSTALLDIR=%{_prefix} LIBDIR=%{_libdir} do_install
+
+make -C zlibrary/ui TARGET_ARCH=desktop UI_TYPE=qt4 \
+	DESTDIR=%{buildroot} INSTALLDIR=%{_prefix} LIBDIR=%{_libdir} do_install
+
+make -C fbreader TARGET_ARCH=desktop UI_TYPE=dummy \
+	DESTDIR=%{buildroot} INSTALLDIR=%{_prefix} LIBDIR=%{_libdir} do_install
+
+# add mimetypes
+desktop-file-install \
+	--vendor="" \
+	--add-mime-type="application/epub+zip;application/rtf;" \
+	--add-mime-type="application/x-mobipocket-ebook;application/x-fictionbook+xml;" \
+	--add-mime-type="text/html;application/xhtml+xml;" \
+	%{buildroot}%{_datadir}/applications/FBReader.desktop --dir=%{buildroot}%{_datadir}/applications/
+
+# man   
 mkdir -p %{buildroot}%{_mandir}/man1
 install -m644 fbreader/desktop/FBReader.1 %{buildroot}%{_mandir}/man1  
 
-#menu entry
-rm -rf %{buildroot}%{_datadir}/applications/FBReader.desktop
-desktop-file-install %SOURCE1 %{buildroot}%{_datadir}/applications/FBReader.desktop
-#### rpmlint
-mkdir -p %{buildroot}%{_datadir}/zlibrary-%{version}
-mv -f %{buildroot}%{_datadir}/zlibrary/ %{buildroot}%{_datadir}/zlibrary-%{version}
-rm -rf %{buildroot}%{_datadir}/zlibrary
-
-
-
-
-
-
-%post -n %{libname}-ui-gtk
-%{_sbindir}/update-alternatives --install \
-    %{_libdir}/zlibrary/ui/zlui-active.so \
-    zlibrary-ui \
-    %{_libdir}/zlibrary/ui/zlui-gtk.so \
-    2
-    
-%preun -n %{libname}-ui-gtk
-if [ "$1" = 0 ] ; then
-    %{_sbindir}/update-alternatives --remove \
-        zlibrary-ui \
-        %{_libdir}/zlibrary/ui/zlui-gtk.so
-fi   
-    
-  
-    
 %files 
 %doc fbreader/LICENSE
 %{_bindir}/FBReader
-%{_datadir}/applications/FBReader.desktop
-%{_datadir}/pixmaps/
-%{_mandir}/man1/FBReader.1.xz
 %{_datadir}/FBReader/
+%{_datadir}/pixmaps/
+%{_datadir}/applications/FBReader.desktop
+%{_mandir}/man1/FBReader.1.xz
 
-%files -n %{libname}
+%files -n  %{libname}
 %doc fbreader/LICENSE
-%{_libdir}/libzlcore.so.*
-%{_libdir}/libzltext.so.*
-%{_datadir}/zlibrary-%{version}
-%dir %{_libdir}/zlibrary
-%dir %{_libdir}/zlibrary/ui
+%{_libdir}/libzlcore.*
+%{_libdir}/libzlui.*
+%{_libdir}/libzltext.*
+%{_datadir}/zlibrary/
 
-%files -n %{develname}
-%doc fbreader/LICENSE
-%{_includedir}/*
-%{_libdir}/lib*.so
-
-%files -n %{libname}-ui-gtk
-%doc fbreader/LICENSE
-%dir %{_libdir}/zlibrary
-%dir %{_libdir}/zlibrary/ui
-%ghost %{_libdir}/zlibrary/ui/zlui-active.so
-%{_libdir}/zlibrary/ui/zlui-gtk.so
+%files -n  %{libname}-devel
 
