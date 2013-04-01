@@ -36,16 +36,9 @@ TCR, RTF, OEB, OpenReader, mobipocket, plain text.
 Summary:        Cross-platform GUI library
 Group:          Development/C
 
-%package -n  %{libname}-devel
-Summary:        Development files for %{libname}
-Group:          Development/C
-
 %description -n %{libname}
 ZLibrary is a cross-platform library to build applications running on
 desktop Linux, Windows, and different Linux-based PDAs.
-
-%description -n %{libname}-devel
-Fake devel package provided for backward compatibility
 ####
 
 
@@ -118,6 +111,4 @@ install -m644 fbreader/desktop/FBReader.1 %{buildroot}%{_mandir}/man1
 %{_libdir}/libzlui.*
 %{_libdir}/libzltext.*
 %{_datadir}/zlibrary/
-
-%files -n  %{libname}-devel
 
