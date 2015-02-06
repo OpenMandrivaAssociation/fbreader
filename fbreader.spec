@@ -10,7 +10,7 @@
 Summary:	Reader for e-books in various formats
 Name:		fbreader
 Version:	0.99.5
-Release:	0.1
+Release:	0.2
 License:	GPLv2+
 Group:		Office
 Url:		http://www.fbreader.org
