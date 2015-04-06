@@ -10,7 +10,7 @@
 Summary:	Reader for e-books in various formats
 Name:		fbreader
 Version:	0.99.5
-Release:	0.2
+Release:	0.3
 License:	GPLv2+
 Group:		Office
 Url:		http://www.fbreader.org
@@ -164,6 +164,7 @@ desktop-file-install \
 	--add-mime-type="application/epub+zip;application/rtf;" \
 	--add-mime-type="application/x-mobipocket-ebook;application/x-fictionbook+xml;" \
 	--add-mime-type="text/html;application/xhtml+xml;" \
+	--add-mime-type="application/vnd.ms-htmlhelp;" \
 	%{buildroot}%{_datadir}/applications/FBReader.desktop --dir=%{buildroot}%{_datadir}/applications/
 
 # man
