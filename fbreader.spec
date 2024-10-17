@@ -13,7 +13,7 @@ Version:	0.99.5
 Release:	0.3
 License:	GPLv2+
 Group:		Office
-Url:		http://www.fbreader.org
+Url:		https://www.fbreader.org
 #Source0:	http://fbreader.org/files/desktop/%{name}-sources-%{version}.tgz
 # from git this time
 Source0:	%{name}-%{version}.tar.bz2
